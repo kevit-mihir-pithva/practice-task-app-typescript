@@ -10,7 +10,7 @@ export interface Req extends Request{
 export async function auth(req:Req,res:Response,next:NextFunction) {
     try {
         const token = req.header("Authorization").replace("Bearer ","")        
-        const decode = jwt.verify(token,"typescript")
+        const decode = jwt.verify(token,process.env.JWT_SECRETE_KEY)
         const user = await User.findOne({
             _id:decode._id,
             "tokens.token":token
