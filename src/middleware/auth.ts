@@ -1,9 +1,9 @@
 import { NextFunction, Request,Response } from 'express'
 import jwt from 'jsonwebtoken'
-import {User} from '../models/userModel'
+import {IUser, User} from '../models/userModel'
 
 export interface Req extends Request{
-    user:any,
+    user:IUser,
     token:string
 }
 

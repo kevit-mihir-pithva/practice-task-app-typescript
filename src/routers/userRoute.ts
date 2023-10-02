@@ -1,5 +1,5 @@
 import {Router , Request ,Response} from "express"
-import {User} from "../models/userModel"
+import {IUser, User} from "../models/userModel"
 import {Req, auth} from "../middleware/auth";
 
 export const userRouter = Router();
@@ -75,7 +75,7 @@ userRouter.patch("/users/me", auth, async (req:Req,res:Response) => {
 
 userRouter.delete("/users/me", auth, async (req:Req,res:Response) => {
     try {
-        await User.findOneAndDelete(req.user)
+        await User.findByIdAndDelete(req.user._id)
         res.send(req.user);
     } catch (error) {
         res.status(500).send("Error: " + error);

@@ -1,4 +1,4 @@
-import { Model, Schema, HydratedDocument, model, Types } from 'mongoose';
+import { Model, Schema, HydratedDocument, model, Types, Document } from 'mongoose';
 import validator from 'validator';
 import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
@@ -9,12 +9,12 @@ interface Token{
     token:string
 }
 
-interface IUser {
+export interface IUser extends Document{
     name:string,
     age:number,
     email:string,
     password:string,
-    tokens:Types.DocumentArray<Token>
+    tokens:Token[]
 }
 
 interface IUserMethods {
@@ -25,7 +25,7 @@ interface UserModel extends Model<IUser, {}, IUserMethods> {
     findByCredentials(email:string,password:string):Promise<HydratedDocument<IUser, IUserMethods>>
 }
 
-const userSchema = new Schema<IUser, UserModel, IUserMethods>({
+export const userSchema = new Schema<IUser, UserModel, IUserMethods>({
     name:{
         type:String,
         required:true,
@@ -120,6 +120,5 @@ userSchema.pre("save",async function(next){
 userSchema.post("findOneAndDelete", async function (user) {
     await Task.deleteMany({ owner : user._id });
 })
-
 
 export const User = model<IUser, UserModel>('User', userSchema);
